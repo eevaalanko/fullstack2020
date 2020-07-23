@@ -3,19 +3,20 @@ import ReactDOM from "react-dom";
 
 const Header = ({ course }) => <h1>{course}</h1>;
 
+const Part = ({ part }) => (
+  <p>
+    {part.text} {part.exercises}
+  </p>
+);
+
 const Content = ({ content }) => (
   <div>
-    <p>
-      {content[0].text} {content[0].exercises}
-    </p>
-    <p>
-      {content[1].text} {content[1].exercises}
-    </p>
-    <p>
-      {content[2].text} {content[2].exercises}
-    </p>
+    <Part part={content[0]} />
+    <Part part={content[1]} />
+    <Part part={content[2]} />
   </div>
 );
+
 const Total = ({ text, content }) => (
   <p>
     {text} {content.reduce((acc, curr) => acc + curr.exercises, 0)}
@@ -42,7 +43,7 @@ const App = () => {
 
   return (
     <div>
-      <Header cource={course} />
+      <Header course={course} />
       <Content content={content} />
       <Total text={totalText} content={content} />
     </div>
