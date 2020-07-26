@@ -13,6 +13,53 @@ const Filter = ({ handleChange, newFilter }) => (
   </div>
 );
 
+const PersonForm = ({
+  addPerson,
+  handleNameChange,
+  newName,
+  handleNumberChange,
+  newNumber,
+}) => (
+  <div>
+    <h2>Add a new</h2>
+
+    <form onSubmit={addPerson}>
+      <div>
+        name:
+        <input
+          type="text"
+          name="name"
+          onChange={handleNameChange}
+          value={newName}
+        />
+        <div>
+          number:
+          <input
+            type="text"
+            name="number"
+            onChange={handleNumberChange}
+            value={newNumber}
+          />
+        </div>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  </div>
+);
+
+const Persons = ({ persons }) => (
+  <div>
+    <h2>Numbers</h2>
+    {persons.map((person) => (
+      <p key={person.name}>
+        {person.name} {person.number}
+      </p>
+    ))}
+  </div>
+);
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123123" },
@@ -51,38 +98,16 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phone book</h2>
+      <h1>Phone book</h1>
       <Filter handleChange={handleFilterChange} newFilter={newFilter} />
-      <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name:
-          <input
-            type="text"
-            name="name"
-            onChange={handleNameChange}
-            value={newName}
-          />
-          <div>
-            number:
-            <input
-              type="text"
-              name="number"
-              onChange={handleNumberChange}
-              value={newNumber}
-            />
-          </div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {filteredPersons.map((person) => (
-        <p key={person.name}>
-          {person.name} {person.number}
-        </p>
-      ))}
+      <PersonForm
+        addPerson={addPerson}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        newName={newName}
+        newNumber={newNumber}
+      />
+      <Persons persons={filteredPersons} />
     </div>
   );
 };
