@@ -16,17 +16,19 @@ const Content = ({ content }) => (
     ))}
   </div>
 );
-const Total = ({ text, content }) => (
+const Total = ({ text1, text2, content }) => (
   <p>
-    {text} {content.reduce((acc, curr) => acc + curr.exercises, 0)}
+    <b>
+      {text1} {content.reduce((acc, curr) => acc + curr.exercises, 0)} {text2}
+    </b>
   </p>
 );
 
-const Course = ({ name, parts, totalText }) => (
+const Course = ({ name, parts, totalText1, totalText2 }) => (
   <div>
     <Header course={name} />
     <Content content={parts} />
-    <Total text={totalText} content={parts} />
+    <Total text1={totalText1} text2={totalText2} content={parts} />
   </div>
 );
 
@@ -49,8 +51,14 @@ const App = () => {
         name: "State of a component",
         exercises: 14,
       },
+      {
+        id: 4,
+        name: "Redux",
+        exercises: 11,
+      },
     ],
-    totalText: "Number of exercises",
+    totalText1: "total of",
+    totalText2: "exercises",
   };
 
   return (
