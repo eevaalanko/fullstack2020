@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040- 123 123" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleNameChange = (event) => setNewName(event.target.value);
+  const handleNumberChange = (event) => setNewNumber(event.target.value);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -16,15 +20,17 @@ const App = () => {
     } else if (newName.length > 1) {
       const personObject = {
         name: newName,
+        number: newNumber,
       };
       setPersons(persons.concat(personObject));
     }
     setNewName("");
+    setNewNumber("");
   };
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>Phone book</h2>
       <form onSubmit={addPerson}>
         <div>
           name:
@@ -34,6 +40,15 @@ const App = () => {
             onChange={handleNameChange}
             value={newName}
           />
+          <div>
+            number:
+            <input
+              type="text"
+              name="number"
+              onChange={handleNumberChange}
+              value={newNumber}
+            />
+          </div>
         </div>
         <div>
           <button type="submit">add</button>
@@ -41,7 +56,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <p key={person.name}>{person.name}</p>
+        <p key={person.name}>
+          {person.name} {person.number}
+        </p>
       ))}
     </div>
   );
