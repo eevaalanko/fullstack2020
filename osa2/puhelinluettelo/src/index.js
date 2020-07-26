@@ -2,21 +2,23 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
 const App = () => {
-  const [persons, setPersons] = useState([{  name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value);
-    setNewName(event.target.value);
-  };
+  const handleNameChange = (event) => setNewName(event.target.value);
 
   const addPerson = (event) => {
     event.preventDefault();
-    const personObject = {
-      name: newName,
-    };
+    const alreadyAdded = persons.map((person) => person.name).includes(newName);
 
-    setPersons(persons.concat(personObject));
+    if (alreadyAdded) {
+      alert(`${newName} is already added to phone book`);
+    } else if (newName.length > 1) {
+      const personObject = {
+        name: newName,
+      };
+      setPersons(persons.concat(personObject));
+    }
     setNewName("");
   };
 
@@ -25,7 +27,13 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPerson}>
         <div>
-          name: <input type="text" name="name" onChange={handleNameChange} />
+          name:
+          <input
+            type="text"
+            name="name"
+            onChange={handleNameChange}
+            value={newName}
+          />
         </div>
         <div>
           <button type="submit">add</button>
