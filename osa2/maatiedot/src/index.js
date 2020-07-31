@@ -21,29 +21,39 @@ const Country = ({ country }) => (
     <h2>{country.name}</h2>
     <p>capital {country.capital}</p>
     <p>population {country.population}</p>
-    <h4>Languages</h4>
+    <h4>Spoken languages</h4>
     <ul>
       {country.languages.map((lang) => (
         <li>{lang.name}</li>
       ))}
     </ul>
     <img alt="flag" src={country.flag} width="20%" height="20%" border="1" />
+    <h4>Weather in {country.capital}</h4>
+    <p>
+      <b>temperature:</b>
+      {country.weather.temperature} Celcius
+    </p>
+    <img
+      alt="weather"
+      src={country.weather.weather_icons[0]}
+      width="10%"
+      height="10%"
+      border="1"
+    />
+    <p>
+      <b>wind:</b>
+      {country.weather.wind_speed} mph direction {country.weather.wind_dir}
+    </p>
   </div>
 );
 
-const Countries = ({ countries, setVisible }) => (
+const Countries = ({ countries, setSelectedCountry }) => (
   <div>
     {countries.map((country) => (
-      <div>
-        {country.isVisible ? (
-          <Country country={country} />
-        ) : (
-          <p key={country.name}>
-            {country.name}
-            <button onClick={() => setVisible(country)}>show</button>
-          </p>
-        )}
-      </div>
+      <p key={country.name}>
+        {country.name}
+        <button onClick={() => setSelectedCountry(country)}>show</button>
+      </p>
     ))}
   </div>
 );
@@ -51,16 +61,21 @@ const Countries = ({ countries, setVisible }) => (
 const App = () => {
   const [newName, setNewName] = useState("");
   const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const addVisibility = (country) => {
-    const visibleCountry = {
-      ...country,
-      isVisible: true,
-    };
-    const newCountries = countries.map((c) =>
-      c.name === country.name ? visibleCountry : c
-    );
-    setCountries(newCountries);
+  const api_key = process.env.REACT_APP_API_KEY;
+
+  const setCountryWithWeather = (country) => {
+    axios
+      .get(
+        "http://api.weatherstack.com/current?access_key=" +
+          api_key +
+          "&query=" +
+          country.capital
+      )
+      .then((response) => {
+        setSelectedCountry({ ...country, weather: response.data.current });
+      });
   };
 
   const filteredCountries = (newName, countries) =>
@@ -71,8 +86,13 @@ const App = () => {
       : [];
 
   useEffect(() => {
+    setSelectedCountry(null);
     axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
-      setCountries(filteredCountries(newName, response.data));
+      const filtered = filteredCountries(newName, response.data);
+      if (filtered.length === 1) {
+        setCountryWithWeather(filtered[0]);
+      }
+      setCountries(filtered);
     });
   }, [newName]);
 
@@ -81,11 +101,18 @@ const App = () => {
   return (
     <div>
       <CountryForm handleNameChange={handleNameChange} newName={newName} />
-      {countries.length > 10 && <p>Too many matches, try another filter</p>}
-      {countries.length > 1 && countries.length < 10 && (
-        <Countries countries={countries} setVisible={addVisibility} />
+
+      {!selectedCountry && countries.length > 10 && (
+        <p>Too many matches, try another filter</p>
       )}
-      {countries.length === 1 && <Country country={countries[0]} />}
+      {!selectedCountry && countries.length > 1 && countries.length < 10 && (
+        <Countries
+          countries={countries}
+          selectedCountry={selectedCountry}
+          setSelectedCountry={setCountryWithWeather}
+        />
+      )}
+      {selectedCountry && <Country country={selectedCountry} />}
     </div>
   );
 };
