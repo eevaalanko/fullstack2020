@@ -67,11 +67,21 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
 
-  useEffect(() => {
+  const getPersons = () => {
     axios.get("http://localhost:3001/persons").then((response) => {
       setPersons(response.data);
     });
+  };
+
+  useEffect(() => {
+    getPersons();
   }, []);
+
+  const postPerson = (person) => {
+    axios.post("http://localhost:3001/persons", person).then((response) => {
+      console.log("response", response);
+    });
+  };
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
@@ -88,7 +98,9 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      setPersons(persons.concat(personObject));
+      postPerson(personObject);
+      getPersons();
+      //   setPersons(persons.concat(personObject));
     }
     setNewName("");
     setNewNumber("");
