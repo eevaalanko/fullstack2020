@@ -84,15 +84,23 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-    const alreadyAdded = persons.map((person) => person.name).includes(newName);
+    const personObject = {
+      name: newName,
+      number: newNumber,
+    };
+    const alreadyAdded = persons.filter((person) => person.name === newName);
 
-    if (alreadyAdded) {
-      alert(`${newName} is already added to phone book`);
+    if (alreadyAdded.length > 0) {
+      if (
+        window.confirm(
+          `${newName} is already added to phone book, replace the old number with new one`
+        )
+      ) {
+        personService
+          .update(alreadyAdded[0].id, { id: alreadyAdded.id, ...personObject })
+          .then((response) => getPersons());
+      }
     } else if (newName.length > 1) {
-      const personObject = {
-        name: newName,
-        number: newNumber,
-      };
       personService.create(personObject).then((response) => {
         setPersons(persons.concat(response));
       });
