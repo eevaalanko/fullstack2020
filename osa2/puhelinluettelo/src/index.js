@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
+import personService from "./personService";
 
 const Filter = ({ handleChange, newFilter }) => (
   <div>
@@ -68,20 +68,12 @@ const App = () => {
   const [newFilter, setNewFilter] = useState("");
 
   const getPersons = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
+    personService.getAll().then((response) => setPersons(response));
   };
 
   useEffect(() => {
     getPersons();
   }, []);
-
-  const postPerson = (person) => {
-    axios.post("http://localhost:3001/persons", person).then((response) => {
-      console.log("response", response);
-    });
-  };
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
@@ -98,9 +90,9 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      postPerson(personObject);
-      getPersons();
-      //   setPersons(persons.concat(personObject));
+      personService.create(personObject).then((response) => {
+        setPersons(persons.concat(response));
+      });
     }
     setNewName("");
     setNewNumber("");
