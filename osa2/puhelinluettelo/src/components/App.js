@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const [infoMessage, setInfoMessage] = useState(null);
 
   const getPersons = () => {
@@ -32,12 +32,20 @@ const App = () => {
     }, 5000);
   };
 
+  const showErrorMessage = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
     const personObject = {
       name: newName,
       number: newNumber,
     };
+    getPersons();
     const alreadyAdded = persons.filter((person) => person.name === newName);
 
     if (alreadyAdded.length > 0) {
@@ -48,10 +56,15 @@ const App = () => {
       ) {
         personService
           .update(alreadyAdded[0].id, { id: alreadyAdded.id, ...personObject })
-          .then((response) => getPersons());
-        showInfoMessage(`Updated ${newName}`);
+          .then((response) => {
+            getPersons();
+            showInfoMessage(`Updated ${newName}`);
+          })
+          .catch(() => {
+            setErrorMessage(`${alreadyAdded.name} has already been deleted`);
+          });
       }
-    } else if (newName.length > 1) {
+    } else if (newName.length > 0) {
       personService.create(personObject).then((response) => {
         setPersons(persons.concat(response));
         showInfoMessage(`Added ${newName}`);
@@ -68,10 +81,13 @@ const App = () => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
         .remove(person.id)
-        .then((response) =>
-          setPersons(persons.filter((p) => p.id !== person.id))
-        );
-      showInfoMessage(`Deleted ${person.name}`);
+        .then((response) => {
+          setPersons(persons.filter((p) => p.id !== person.id));
+          showInfoMessage(`Deleted ${person.name}`);
+        })
+        .catch(() => {
+          setErrorMessage(`${person.name} has already been deleted`);
+        });
     }
   };
 
@@ -85,7 +101,7 @@ const App = () => {
   return (
     <div>
       <h1>Phone book</h1>
-      <Notification message={infoMessage} />
+      <Notification message={infoMessage} errorMessage={errorMessage} />
       <Filter handleChange={handleFilterChange} newFilter={newFilter} />
       <PersonForm
         addPerson={addPerson}
