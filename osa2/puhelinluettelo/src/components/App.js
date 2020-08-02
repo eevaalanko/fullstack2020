@@ -61,7 +61,9 @@ const App = () => {
             showInfoMessage(`Updated ${newName}`);
           })
           .catch(() => {
-            setErrorMessage(`${alreadyAdded.name} has already been deleted`);
+            setErrorMessage(
+              `Information of ${alreadyAdded.name} has already been removed from server`
+            );
           });
       }
     } else if (newName.length > 0) {
@@ -86,7 +88,7 @@ const App = () => {
           showInfoMessage(`Deleted ${person.name}`);
         })
         .catch(() => {
-          setErrorMessage(`${person.name} has already been deleted`);
+          setErrorMessage(`Information of ${person.name} has already been removed from server`);
         });
     }
   };
