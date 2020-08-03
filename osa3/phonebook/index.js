@@ -72,10 +72,21 @@ app.post("/api/persons", (request, response) => {
       error: "name missing",
     });
   }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: "number missing",
+    });
+  }
+  if (persons.filter((p) => p.name === body.name).length > 0) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
   const person = {
     name: body.name,
     id: generateId(),
-    number: body.number || "",
+    number: body.number,
   };
   persons = persons.concat(person);
   response.json(person);
