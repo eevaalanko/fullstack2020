@@ -62,10 +62,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const generateId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((p) => p.id)) : 0;
-  return maxId + 1;
-};
+const generateId = () => Math.floor(Math.random() * 110000);
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
