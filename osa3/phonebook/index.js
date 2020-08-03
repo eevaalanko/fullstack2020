@@ -26,6 +26,17 @@ let persons = [
   },
 ];
 
+app.get("/info", (req, res) => {
+  // const text = `Phonebook has info for ${persons.length} people`;
+  res.send(
+    "<div><p>Phonebook has info of " +
+      persons.length +
+      " people</p> <p>" +
+      new Date() +
+      "</p> </div>"
+  );
+});
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>");
 });
