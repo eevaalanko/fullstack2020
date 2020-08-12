@@ -67,13 +67,19 @@ const App = () => {
           });
       }
     } else if (newName.length > 0) {
-      personService.create(personObject).then((response) => {
-        setPersons(persons.concat(response));
-        showInfoMessage(`Added ${newName}`);
-        setTimeout(() => {
-          setInfoMessage(null);
-        }, 5000);
-      });
+      personService
+        .create(personObject)
+        .then((response) => {
+          setPersons(persons.concat(response));
+          showInfoMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setInfoMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.log("fail, error:     ", error.response.data.error);
+          setErrorMessage(error.response.data.error);
+        });
     }
     setNewName("");
     setNewNumber("");
@@ -88,7 +94,9 @@ const App = () => {
           showInfoMessage(`Deleted ${person.name}`);
         })
         .catch(() => {
-          setErrorMessage(`Information of ${person.name} has already been removed from server`);
+          setErrorMessage(
+            `Information of ${person.name} has already been removed from server`
+          );
         });
     }
   };

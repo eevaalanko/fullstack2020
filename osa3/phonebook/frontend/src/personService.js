@@ -12,11 +12,7 @@ const getAll = () => {
 
 const create = (newObject) => {
   const request = axios.post(baseUrl, newObject);
-  return request
-    .then((response) => response.data)
-    .catch((error) => {
-      console.log("fail, error: ", error);
-    });
+  return request.then((response) => response.data);
 };
 
 const remove = (id) => {
