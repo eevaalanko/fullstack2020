@@ -22,3 +22,20 @@ describe('total likes', () => {
     expect(listHelper.totalLikes(testBlogs)).toEqual(31)
   })
 })
+
+
+describe('favourite blog', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.favoriteBlog([])).toEqual(null)
+  })
+
+  test('when list has only one blog is that one blog', () => {
+    const testBlogs = [{ id: '1', likes: 5 }]
+    expect(listHelper.favoriteBlog(testBlogs)).toEqual(testBlogs[0])
+  })
+
+  test('returns the blog with most likes', () => {
+    const testBlogs = [{ id: '1', likes: 22 }, { id: '2', likes: 3 }, { id: '3', likes: 6 }]
+    expect(listHelper.favoriteBlog(testBlogs)).toEqual(testBlogs[0])
+  })
+})
