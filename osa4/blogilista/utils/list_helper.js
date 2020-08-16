@@ -1,25 +1,20 @@
 const _ = require('lodash')
 
-const dummy = (blogs) => {
-  console.log('blogs: ', blogs)
+const dummy = () => {
   return 1
 }
 
-const totalLikes = (blogs) => {
-  console.log('blogs: ', blogs)
-  return blogs.length === 0
+const totalLikes = (blogs) =>
+  blogs.length === 0
     ? 0
     : blogs.reduce((amount, blog) => amount + blog.likes, 0)
-}
 
-const favoriteBlog = (blogs) => {
-  console.log('blogs: ', blogs)
-  return blogs.length === 0
+const favoriteBlog = (blogs) =>
+  blogs.length === 0
     ? null
     : blogs.reduce((prev, current) =>
       +prev.likes > +current.likes ? prev : current
     )
-}
 
 const mostBlogs = (blogs) => {
   if (blogs.length === 0) return null
