@@ -41,9 +41,14 @@ test('there are two blogs', async () => {
   expect(response.body).toHaveLength(2)
 })
 
-test.only('the first blog is about dogs', async () => {
+test('the first blog is about dogs', async () => {
   const response = await api.get('/api/blogs')
   expect(response.body[0].title).toBe('koirablogi')
+})
+
+test('blog contains prop id', async () => {
+  const response = await api.get('/api/blogs')
+  expect(response.body[0].id).toBeDefined()
 })
 
 afterAll(() => {
