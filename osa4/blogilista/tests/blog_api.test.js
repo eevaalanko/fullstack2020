@@ -74,6 +74,19 @@ test('likes are set to zero if likes are not given', async () => {
   expect(addedBlog.likes).toEqual(0)
 })
 
+test('added blogs should contain title and author', async () => {
+  const newBlog = {
+    url: 'http://someutl.com',
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+})
+
+
+
 afterAll(() => {
   mongoose.connection.close()
 })

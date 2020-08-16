@@ -4,8 +4,8 @@ const config = require('./../utils/config')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
+  title: { type: String, required: true },
+  author: { type: String, required: true },
   url: String,
   likes: Number,
 })
@@ -21,9 +21,11 @@ blogSchema.set('toJSON', {
   },
 })
 
-
 mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(config.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log('connected to MongoDB')
   })
