@@ -37,7 +37,7 @@ test('blog contains prop id', async () => {
   expect(response.body[0].id).toBeDefined()
 })
 
-test.only('a valid blog can be added ', async () => {
+test('a valid blog can be added ', async () => {
   const newBlog = {
     title: 'foo',
     author: 'laa',
@@ -55,6 +55,23 @@ test.only('a valid blog can be added ', async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
   const titles = blogsAtEnd.map(b => b.title)
   expect(titles).toContain(newBlog.title)
+})
+
+test('likes are set to zero if likes are not given', async () => {
+  const newBlog = {
+    title: 'foo',
+    author: 'laa',
+    url: 'http://someutl.com',
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  const addedBlog = blogsAtEnd.find(b => b.title === 'foo')
+  expect(addedBlog.likes).toEqual(0)
 })
 
 afterAll(() => {
