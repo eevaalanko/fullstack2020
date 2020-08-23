@@ -3,6 +3,9 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -15,6 +18,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -103,58 +107,35 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification message={message} errorMessage={errorMessage} />
       {user === null ? (
-        <div>
-          <h2>Log in to application</h2>
-          <form onSubmit={handleLogin}>
-            <div>
-              username
-              <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </div>
-            <div>
-              password
-              <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </div>
-            <button type="submit">login</button>
-          </form>
-        </div>
+        <Togglable buttonLabel='login'>
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+        />
+        </Togglable>
       ) : (
         <div>
           <h2>blogs</h2>
           <p>
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
+          <Togglable buttonLabel='new note'>
           <h2>create new</h2>
-          <form onSubmit={addBlog}>
-            <p>
-              Title: <input value={newTitle} onChange={handleTitleChange} />
-            </p>
-            <p>
-              Author: <input value={newAuthor} onChange={handleAuthorChange} />
-            </p>
-            <p>
-              Link: <input value={newLink} onChange={handleLinkChange} />
-            </p>
-            <p>
-              Likes:{" "}
-              <input
-                type="number"
-                value={newLikes}
-                onChange={handleLikesChange}
-              />
-            </p>
-
-            <button type="submit">save</button>
-          </form>
+          <BlogForm
+            addBlog={addBlog}
+            newTitle={newTitle}
+            handleTitleChange={handleTitleChange}
+            newAuthor={newAuthor}
+            handleAuthorChange={handleAuthorChange}
+            newLink={newLink}
+            handleLinkChange={handleLinkChange}
+            newLikes={newLikes}
+            handleLikesChange={handleLikesChange}
+          />
+          </Togglable>
           <br />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
