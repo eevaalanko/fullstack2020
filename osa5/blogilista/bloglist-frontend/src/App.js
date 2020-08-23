@@ -1,106 +1,106 @@
-import React, { useState, useEffect } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import Notification from "./components/Notification";
-import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
+import React, { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newLink, setNewLink] = useState("");
-  const [newLikes, setNewLikes] = useState(0);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [loginVisible, setLoginVisible] = useState(false)
+  const [blogs, setBlogs] = useState([])
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newLink, setNewLink] = useState('')
+  const [newLikes, setNewLikes] = useState(0)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  console.log('blogs : ', blogs)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    blogService.getAll().then((blogs) => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const addBlog = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newLink,
       likes: newLikes,
-    };
+    }
 
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog));
-        setMessage(`a new blog ${newTitle} by ${newAuthor} added`);
+        setBlogs(blogs.concat(returnedBlog))
+        setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
         setTimeout(() => {
-          setMessage(null);
-        }, 2000);
-        setNewTitle("");
-        setNewAuthor("");
-        setNewLink("");
-        setNewLikes(0);
+          setMessage(null)
+        }, 2000)
+        setNewTitle('')
+        setNewAuthor('')
+        setNewLink('')
+        setNewLikes(0)
       })
       .catch(() => {
-        setErrorMessage("validation failed");
+        setErrorMessage('validation failed')
         setTimeout(() => {
-          setErrorMessage(null);
-        }, 2000);
-      });
-  };
+          setErrorMessage(null)
+        }, 2000)
+      })
+  }
 
   const handleTitleChange = (event) => {
-    setNewTitle(event.target.value);
-  };
+    setNewTitle(event.target.value)
+  }
   const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value);
-  };
+    setNewAuthor(event.target.value)
+  }
   const handleLinkChange = (event) => {
-    setNewLink(event.target.value);
-  };
+    setNewLink(event.target.value)
+  }
   const handleLikesChange = (event) => {
-    setNewLikes(event.target.value);
-  };
+    setNewLikes(event.target.value)
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const user = await loginService.login({
         username,
         password,
-      });
+      })
 
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
-      setUser(user);
-      setUsername("");
-      setPassword("");
+      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      setErrorMessage("wrong credentials");
+      setErrorMessage('wrong credentials')
       setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+        setErrorMessage(null)
+      }, 5000)
     }
-  };
+  }
 
   const logout = () => {
-    setUser(null);
-    window.localStorage.clear();
-  };
+    setUser(null)
+    window.localStorage.clear()
+  }
 
   return (
     <div>
@@ -108,13 +108,13 @@ const App = () => {
       <Notification message={message} errorMessage={errorMessage} />
       {user === null ? (
         <Togglable buttonLabel='login'>
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-        />
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+            setUsername={setUsername}
+            setPassword={setPassword}
+          />
         </Togglable>
       ) : (
         <div>
@@ -123,18 +123,18 @@ const App = () => {
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
           <Togglable buttonLabel='new note'>
-          <h2>create new</h2>
-          <BlogForm
-            addBlog={addBlog}
-            newTitle={newTitle}
-            handleTitleChange={handleTitleChange}
-            newAuthor={newAuthor}
-            handleAuthorChange={handleAuthorChange}
-            newLink={newLink}
-            handleLinkChange={handleLinkChange}
-            newLikes={newLikes}
-            handleLikesChange={handleLikesChange}
-          />
+            <h2>create new</h2>
+            <BlogForm
+              addBlog={addBlog}
+              newTitle={newTitle}
+              handleTitleChange={handleTitleChange}
+              newAuthor={newAuthor}
+              handleAuthorChange={handleAuthorChange}
+              newLink={newLink}
+              handleLinkChange={handleLinkChange}
+              newLikes={newLikes}
+              handleLikesChange={handleLikesChange}
+            />
           </Togglable>
           <br />
           {blogs.map((blog) => (
@@ -143,7 +143,7 @@ const App = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

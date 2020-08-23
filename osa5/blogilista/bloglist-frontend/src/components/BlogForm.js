@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({
   addBlog,
@@ -22,11 +23,22 @@ const BlogForm = ({
       Link: <input value={newLink} onChange={handleLinkChange} />
     </p>
     <p>
-      Likes:{" "}
+      Likes:{' '}
       <input type="number" value={newLikes} onChange={handleLikesChange} />
     </p>
     <button type="submit">save</button>
   </form>
-);
+)
+BlogForm.propTypes = {
+  addBlog: PropTypes.func.isRequired,
+  newTitle: PropTypes.string.isRequired,
+  handleTitleChange: PropTypes.func.isRequired,
+  newAuthor: PropTypes.string.isRequired,
+  handleAuthorChange: PropTypes.func.isRequired,
+  newLink: PropTypes.string.isRequired,
+  handleLinkChange: PropTypes.func.isRequired,
+  newLikes: PropTypes.string.isRequired,
+  handleLikesChange: PropTypes.func.isRequired,
+}
 
-export default BlogForm;
+export default BlogForm
