@@ -37,7 +37,7 @@ BlogForm.propTypes = {
   handleAuthorChange: PropTypes.func.isRequired,
   newLink: PropTypes.string.isRequired,
   handleLinkChange: PropTypes.func.isRequired,
-  newLikes: PropTypes.string.isRequired,
+  newLikes: PropTypes.number.isRequired,
   handleLikesChange: PropTypes.func.isRequired,
 }
 

@@ -41,7 +41,6 @@ const App = () => {
       url: newLink,
       likes: newLikes,
     }
-
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
@@ -83,9 +82,7 @@ const App = () => {
         username,
         password,
       })
-
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-
       setUser(user)
       setUsername('')
       setPassword('')
@@ -95,6 +92,23 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const addLike = (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    const changedBlog = { ...blog, likes: blog.likes + 1 }
+
+    blogService
+      .update(id, changedBlog)
+      .then((returnedBlog) => {
+        setBlogs(blogs.map((note) => (note.id !== id ? note : returnedBlog)))
+      })
+      .catch(() => {
+        setErrorMessage(`Blog '${blog.title}' was already removed from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
   }
 
   const logout = () => {
@@ -107,7 +121,7 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification message={message} errorMessage={errorMessage} />
       {user === null ? (
-        <Togglable buttonLabel='login'>
+        <Togglable buttonLabel="login">
           <LoginForm
             handleLogin={handleLogin}
             username={username}
@@ -122,7 +136,7 @@ const App = () => {
           <p>
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
-          <Togglable buttonLabel='new note'>
+          <Togglable buttonLabel="new note">
             <h2>create new</h2>
             <BlogForm
               addBlog={addBlog}
@@ -138,7 +152,7 @@ const App = () => {
           </Togglable>
           <br />
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} addLike={addLike} />
           ))}
         </div>
       )}
