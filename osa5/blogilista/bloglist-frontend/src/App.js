@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -151,7 +152,7 @@ const App = () => {
             />
           </Togglable>
           <br />
-          {blogs.map((blog) => (
+          {_.sortBy(blogs, 'likes').reverse().map((blog) => (
             <Blog key={blog.id} blog={blog} addLike={addLike} />
           ))}
         </div>
