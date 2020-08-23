@@ -21,11 +21,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    setMessage(null);
-    setErrorMessage(null);
-  }, []);
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
@@ -35,8 +30,6 @@ const App = () => {
   }, []);
 
   const addBlog = (event) => {
-    setMessage(null);
-    setErrorMessage(null);
     event.preventDefault();
     const blogObject = {
       title: newTitle,
@@ -50,12 +43,20 @@ const App = () => {
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
         setMessage(`a new blog ${newTitle} by ${newAuthor} added`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 2000);
         setNewTitle("");
         setNewAuthor("");
         setNewLink("");
         setNewLikes(0);
       })
-      .catch(() => setErrorMessage("validation failed"));
+      .catch(() => {
+        setErrorMessage("validation failed");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 2000);
+      });
   };
 
   const handleTitleChange = (event) => {
