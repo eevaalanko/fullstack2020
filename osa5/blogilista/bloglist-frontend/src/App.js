@@ -102,7 +102,7 @@ const App = () => {
     blogService
       .update(id, changedBlog)
       .then((returnedBlog) => {
-        setBlogs(blogs.map((note) => (note.id !== id ? note : returnedBlog)))
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
       })
       .catch(() => {
         setErrorMessage(`Blog '${blog.title}' was already removed from server`)
@@ -110,6 +110,23 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       })
+  }
+
+  const removeBlog = (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    if (window.confirm(`Delete ${blog.title}?`)) {
+      blogService
+        .remove(blog.id)
+        .then(() => {
+          setBlogs(blogs.filter((b) => b.id !== blog.id))
+          setMessage(`Deleted ${blog.title}`)
+        })
+        .catch(() => {
+          setErrorMessage(
+            `Information of ${blog.title} has already been removed from server`
+          )
+        })
+    }
   }
 
   const logout = () => {
@@ -153,7 +170,7 @@ const App = () => {
           </Togglable>
           <br />
           {_.sortBy(blogs, 'likes').reverse().map((blog) => (
-            <Blog key={blog.id} blog={blog} addLike={addLike} />
+            <Blog key={blog.id} blog={blog} addLike={addLike} removeBlog={removeBlog} />
           ))}
         </div>
       )}

@@ -9,13 +9,14 @@ const blogStyle = {
   borderWidth: 1,
   marginBottom: 5,
 }
-const Blog = ({ blog, addLike }) => (
+const Blog = ({ blog, addLike, removeBlog }) => (
   <div style={blogStyle}>
     {blog.title} {blog.author}
     <Togglable buttonLabel="view" closeButtonLabel="hide">
       <p>link: {blog.url}</p>
-      <p>likes: {blog.likes}<button   onClick={()=> addLike(blog.id)}>like</button></p>
+      <p>likes: {blog.likes}<button onClick={()=> addLike(blog.id)}>like</button></p>
       <p>user: {blog.user.name}</p>
+      <button onClick={()=> removeBlog(blog.id)}>remove</button>
     </Togglable>
   </div>
 )
@@ -30,6 +31,7 @@ Blog.propTypes = {
     user: PropTypes.shape({name: PropTypes.string})
   }).isRequired,
   addLike: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
 }
 
 export default Blog
