@@ -45,7 +45,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
+        setBlogs(blogs.concat({...returnedBlog, user}))
         setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
         setTimeout(() => {
           setMessage(null)
@@ -154,7 +154,7 @@ const App = () => {
           <p>
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
-          <Togglable buttonLabel="new note">
+          <Togglable buttonLabel="new blog">
             <h2>create new</h2>
             <BlogForm
               addBlog={addBlog}
