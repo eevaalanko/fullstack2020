@@ -4,17 +4,24 @@ import { createStore, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { Provider } from "react-redux";
 import App from "./App";
-import anecdoteReducer from "./reducers/anecdoteReducer";
+import anecdoteReducer, {
+  initializeAnecdotes,
+} from "./reducers/anecdoteReducer";
 import notificationReducer from "./reducers/notificationReducer";
-import filterReducer from './reducers/filterReducer'
+import filterReducer from "./reducers/filterReducer";
+import anecdoteService from "./services/anecdotes";
 
 const reducer = combineReducers({
   anecdotes: anecdoteReducer,
   notification: notificationReducer,
-  filter: filterReducer
+  filter: filterReducer,
 });
 
 const store = createStore(reducer, composeWithDevTools());
+
+anecdoteService
+  .getAll()
+  .then((anecdotes) => store.dispatch(initializeAnecdotes(anecdotes)));
 
 ReactDOM.render(
   <Provider store={store}>
