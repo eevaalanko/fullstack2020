@@ -1,21 +1,21 @@
-describe('Blog app ', function() {
-  beforeEach(function() {
+describe('Blog app ', function () {
+  beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     const user = {
       name: 'Umberto User',
       username: 'username',
-      password: 'password'
+      password: 'password',
     }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
     cy.visit('http://localhost:3000')
   })
-  it('Login from is shown', function() {
+  it('Login from is shown', function () {
     cy.contains('username')
     cy.contains('password')
     cy.contains('login')
   })
 
-  describe('Login',function() {
+  describe('Login', function () {
     it('succeeds with correct credentials', function () {
       cy.contains('login').click()
       cy.get('#username').type('username')
@@ -32,17 +32,15 @@ describe('Blog app ', function() {
     })
   })
 
-
-
-  describe('When logged in', function() {
-    beforeEach(function() {
+  describe('When logged in', function () {
+    beforeEach(function () {
       cy.contains('login').click()
       cy.get('#username').type('username')
       cy.get('#password').type('password')
       cy.get('#login-button').click()
     })
 
-    it('a blog can be created', function() {
+    it('a blog can be created', function () {
       cy.contains('new blog').click()
       cy.get('#title').type('jokublogi')
       cy.get('#author').type('b bloggari')
@@ -54,7 +52,7 @@ describe('Blog app ', function() {
       cy.contains('show')
     })
 
-    it('a blog can be liked', function() {
+    it('a blog can be liked', function () {
       cy.contains('new blog').click()
       cy.get('#title').type('jokublogi')
       cy.get('#author').type('b bloggari')
@@ -67,7 +65,7 @@ describe('Blog app ', function() {
       cy.contains('likes: 1')
     })
 
-    it('a blog can be deleted', function() {
+    it('a blog can be deleted', function () {
       cy.contains('new blog').click()
       cy.get('#title').type('jokublogi')
       cy.get('#author').type('b bloggari')
@@ -79,9 +77,40 @@ describe('Blog app ', function() {
       cy.contains('remove').click()
       cy.get('.infoText').contains('Deleted jokublogi')
       cy.contains('jokublogi').should('not.exist')
+    })
 
+    it('blogs are sorted by likes', function () {
+      cy.contains('new blog').click()
+      cy.get('#title').type('foo')
+      cy.get('#author').type('b bloggari')
+      cy.get('#link').type('blog1.com')
+      cy.get('#likes').type('0')
+      cy.contains('save').click()
 
+      cy.wait(1000)
 
+      cy.get('#title').type('laa')
+      cy.get('#author').type('b bloggari')
+      cy.get('#link').type('blog2.com')
+      cy.get('#likes').type('2')
+      cy.contains('save').click()
+
+      cy.wait(1000)
+
+      cy.get('#title').type('lorem ipsum')
+      cy.get('#author').type('b bloggari')
+      cy.get('#link').type('blog3.com')
+      cy.get('#likes').type('10000')
+      cy.contains('save').click()
+
+      cy.wait(1000)
+
+      const orderedTitles = ['lorem ipsum b bloggari ', 'laa b bloggari ', 'foo b bloggari ']
+      cy.get('.blog-title').should('have.length', 3)
+      const titleList = []
+      cy.get('.blog-title').each((el) => titleList.push(el.text()))
+      cy.wait(3000).then(()=> {
+        expect(titleList).to.deep.eq(orderedTitles)} )
     })
   })
 })
