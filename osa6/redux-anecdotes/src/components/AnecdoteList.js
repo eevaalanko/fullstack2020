@@ -1,8 +1,11 @@
 import React from "react";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
-import {useDispatch, useSelector} from 'react-redux'
-import _ from 'lodash'
-import {addNotification, clearNotification} from '../reducers/notificationReducer'
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import {
+  addNotification,
+  clearNotification,
+} from "../reducers/notificationReducer";
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
@@ -11,17 +14,26 @@ const AnecdoteList = () => {
     "votes"
   ).reverse();
 
+  const filter = useSelector((state) => state.filter);
+
+  console.log("filter ", filter);
+
+  const filteredAnecdotes =
+    filter.length > 0
+      ? anecdotes.filter((a) => a.content.includes(filter))
+      : anecdotes;
+
   const vote = (anecdote) => {
     dispatch(voteAnecdote(anecdote));
     dispatch(addNotification(`you voted '${anecdote.content}'`));
     setTimeout(() => {
-      dispatch(clearNotification())
-    }, 3000)
+      dispatch(clearNotification());
+    }, 3000);
   };
 
   return (
     <div>
-      {anecdotes.map((anecdote) => (
+      {filteredAnecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
