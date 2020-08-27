@@ -1,27 +1,17 @@
-import anecdoteService from "../services/anecdotes";
-
-const initialState = [];
-
-export const addNotification1 = (notification) => {
-  return {
-    type: "ADD_NOTIFICATION",
-    notification,
-  };
-};
-
+let timeoutID = null;
 export const addNotification = (notification, timeOut) => {
+  window.clearTimeout(timeoutID);
   return async (dispatch) => {
     dispatch({
       type: "ADD_NOTIFICATION",
       data: notification,
     });
-    await new Promise((resolve) =>
-      setTimeout(() => {
-        console.log("timeout");
+    await new Promise((resolve) => {
+      timeoutID = setTimeout(() => {
         dispatch(clearNotification());
         resolve();
-      }, timeOut)
-    );
+      }, timeOut);
+    });
   };
 };
 
@@ -31,10 +21,12 @@ export const clearNotification = () => {
   };
 };
 
+const initialState = { notification: "" };
+
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_NOTIFICATION":
-      return [action.data];
+      return { ...state, notification: action.data };
     case "CLEAR_NOTIFICATION":
       return initialState;
     default:
