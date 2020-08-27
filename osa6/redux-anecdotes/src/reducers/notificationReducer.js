@@ -1,10 +1,16 @@
-const initialState = ["joku notifikaatio"]
+const initialState = []
 
 
-export const notificationChange = notification => {
+export const addNotification = notification => {
   return {
     type: "ADD_NOTIFICATION",
     notification,
+  }
+}
+
+export const clearNotification = () => {
+  return {
+    type: "CLEAR_NOTIFICATION",
   }
 }
 
@@ -12,7 +18,7 @@ export const notificationChange = notification => {
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
   case "ADD_NOTIFICATION":
-    return [...state, action.data];
+    return [action.notification];
   case "CLEAR_NOTIFICATION":
     return initialState;
   default:

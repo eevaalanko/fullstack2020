@@ -24,10 +24,10 @@ export const createAnecdote = (content) => {
   };
 };
 
-export const voteAnecdote = (id) => {
+export const voteAnecdote = (anecdote) => {
   return {
     type: "ADD_VOTE",
-    id,
+    anecdote,
   };
 };
 
@@ -38,12 +38,9 @@ const anecdoteReducer = (state = initialState, action) => {
     case "NEW_ANECDOTE":
       return [...state, action.data];
     case "ADD_VOTE": {
-      const selectedAnecdote = state.find(
-        (anecdote) => anecdote.id === action.id
-      );
       return state.map((el) =>
-        el.id === selectedAnecdote.id
-          ? { ...selectedAnecdote, votes: selectedAnecdote.votes + 1 }
+        el.id === action.anecdote.id
+          ? { ...action.anecdote, votes: action.anecdote.votes + 1 }
           : el
       );
     }
