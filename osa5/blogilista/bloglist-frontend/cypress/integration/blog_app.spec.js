@@ -15,8 +15,6 @@ describe('Blog app ', function() {
     cy.contains('login')
   })
 
-
-
   describe('Login',function() {
     it('succeeds with correct credentials', function () {
       cy.contains('login').click()
@@ -53,6 +51,20 @@ describe('Blog app ', function() {
       cy.contains('save').click()
       cy.contains('jokublogi')
       cy.contains('b bloggari')
+      cy.contains('show')
+    })
+
+    it('a blog can be liked', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('jokublogi')
+      cy.get('#author').type('b bloggari')
+      cy.get('#link').type('blog.com')
+      cy.get('#likes').type('0')
+      cy.contains('save').click()
+      cy.contains('show').click()
+      cy.contains('likes: 0')
+      cy.contains('like').click()
+      cy.contains('likes: 1')
     })
   })
 })
