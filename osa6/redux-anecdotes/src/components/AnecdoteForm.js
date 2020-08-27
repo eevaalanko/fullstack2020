@@ -9,14 +9,16 @@ const AnecdoteForm = () => {
     const content = event.target.content.value;
     dispatch(createAnecdote(content));
   };
-
   return (
-    <form onSubmit={addNew}>
-      <div>
-        <input name="content" />
-      </div>
-      <button type="submit">create</button>
-    </form>
+    <div>
+      <h2>create new</h2>
+      <form onSubmit={addNew}>
+        <div>
+          <input name="content" />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
   );
 };
 
