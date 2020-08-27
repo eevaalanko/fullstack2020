@@ -5,6 +5,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
+
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   console.log('operation returned the following blogs', blogs)
@@ -14,10 +15,14 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   let blog = {}
   let requ = request.body
+
+
+  console.log('request ', request)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!request.token || !decodedToken.id) {
     return response.status(403).json({ error: 'token missing or invalid' })
   }
+
   const user = await User.findById(decodedToken.id)
 
   requ.likes === undefined
@@ -40,11 +45,12 @@ blogsRouter.post('/', async (request, response) => {
 
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  response.status(201).json(savedBlog)
+  response.status(201).json(savedBlog.populate('user', { username: 1, name: 1 }))
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
+  // eslint-disable-next-line no-undef
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (blog.user.toString() !== decodedToken.id) {
     return response

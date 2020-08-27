@@ -14,17 +14,17 @@ const BlogForm = ({
 }) => (
   <form onSubmit={addBlog}>
     <p>
-      Title: <input value={newTitle} onChange={handleTitleChange} />
+      Title: <input id="title" value={newTitle} onChange={handleTitleChange} />
     </p>
     <p>
-      Author: <input value={newAuthor} onChange={handleAuthorChange} />
+      Author: <input id="author" value={newAuthor} onChange={handleAuthorChange} />
     </p>
     <p>
-      Link: <input value={newLink} onChange={handleLinkChange} />
+      Link: <input id="link" value={newLink} onChange={handleLinkChange} />
     </p>
     <p>
       Likes:{' '}
-      <input type="number" value={newLikes} onChange={handleLikesChange} />
+      <input id="likes" type="number" value={newLikes} onChange={handleLikesChange} />
     </p>
     <button type="submit">save</button>
   </form>

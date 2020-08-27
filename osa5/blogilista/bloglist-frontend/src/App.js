@@ -45,7 +45,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
-        setBlogs(blogs.concat({...returnedBlog, user}))
+        setBlogs(blogs.concat({ ...returnedBlog, user }))
         setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
         setTimeout(() => {
           setMessage(null)
@@ -55,7 +55,8 @@ const App = () => {
         setNewLink('')
         setNewLikes(0)
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log('err:               ', err)
         setErrorMessage('validation failed')
         setTimeout(() => {
           setErrorMessage(null)
@@ -87,6 +88,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+      if (loggedUserJSON) {
+        const user = JSON.parse(loggedUserJSON)
+        setUser(user)
+        blogService.setToken(user.token)
+      }
     } catch (exception) {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -169,9 +176,16 @@ const App = () => {
             />
           </Togglable>
           <br />
-          {_.sortBy(blogs, 'likes').reverse().map((blog) => (
-            <Blog key={blog.id} blog={blog} addLike={addLike} removeBlog={removeBlog} />
-          ))}
+          {_.sortBy(blogs, 'likes')
+            .reverse()
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                addLike={addLike}
+                removeBlog={removeBlog}
+              />
+            ))}
         </div>
       )}
     </div>
