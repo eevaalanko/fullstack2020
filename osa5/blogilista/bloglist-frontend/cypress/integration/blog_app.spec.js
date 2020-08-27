@@ -66,5 +66,22 @@ describe('Blog app ', function() {
       cy.contains('like').click()
       cy.contains('likes: 1')
     })
+
+    it('a blog can be deleted', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('jokublogi')
+      cy.get('#author').type('b bloggari')
+      cy.get('#link').type('blog.com')
+      cy.get('#likes').type('0')
+      cy.contains('save').click()
+      cy.contains('jokublogi')
+      cy.contains('show').click()
+      cy.contains('remove').click()
+      cy.get('.infoText').contains('Deleted jokublogi')
+      cy.contains('jokublogi').should('not.exist')
+
+
+
+    })
   })
 })
