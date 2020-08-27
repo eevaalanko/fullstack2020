@@ -1,18 +1,22 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {createAnecdote, voteAnecdote} from './reducers/anecdoteReducer'
+import { createAnecdote, voteAnecdote } from "./reducers/anecdoteReducer";
+import _ from "lodash";
 
 const App = () => {
   const dispatch = useDispatch();
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = _.sortBy(
+    useSelector((state) => state),
+    "votes"
+  ).reverse();
   const addNew = (event) => {
     event.preventDefault();
-    const content = event.target.content.value
+    const content = event.target.content.value;
     dispatch(createAnecdote(content));
   };
 
   const vote = (id) => {
-    dispatch(voteAnecdote(id))
+    dispatch(voteAnecdote(id));
   };
 
   return (
