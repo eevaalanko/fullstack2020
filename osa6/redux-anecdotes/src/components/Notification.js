@@ -1,16 +1,17 @@
-import React from 'react'
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
 const Notification = () => {
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
-    borderWidth: 1
-  }
-  return (
-    <div style={style}>
-      render here notification...
-    </div>
-  )
-}
+    borderWidth: 1,
+  };
+  const dispatch = useDispatch();
+  const notificationText = useSelector((state) => state.notification);
 
-export default Notification
+  return <div style={style}>{notificationText}</div>;
+};
+
+export default Notification;

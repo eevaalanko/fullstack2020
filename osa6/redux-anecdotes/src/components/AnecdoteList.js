@@ -6,7 +6,7 @@ import _ from 'lodash'
 const AnecdoteList = () => {
   const dispatch = useDispatch();
   const anecdotes = _.sortBy(
-    useSelector((state) => state),
+    useSelector((state) => state.anecdotes),
     "votes"
   ).reverse();
 
