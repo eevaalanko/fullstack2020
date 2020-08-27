@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom/extend-expect'
 import deepFreeze from 'deep-freeze'
 import counterReducer from './reducer'
 
