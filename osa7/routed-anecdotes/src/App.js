@@ -90,6 +90,7 @@ const CreateNew = (props) => {
   const content = useField("text");
   const author = useField("text");
   const info = useField("text");
+
   const resetFields = () => {
     content.reset();
   };
@@ -113,15 +114,15 @@ const CreateNew = (props) => {
       <form>
         <div>
           content
-          <input {...content} />
+          <input {  ...content.fieldProps}  />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.fieldProps} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.fieldProps} />
         </div>
         <button type="submit" onClick={handleSubmit}>create</button>
         <button type="text" onClick={resetFields}>
