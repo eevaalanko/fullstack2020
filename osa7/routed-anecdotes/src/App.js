@@ -14,7 +14,7 @@ const Menu = () => {
   };
   return (
     <div>
-      <Link to="/anecdotes" style={padding}>
+      <Link to="/" style={padding}>
         anecdotes
       </Link>
       <Link to="/create" style={padding}>
@@ -42,7 +42,9 @@ const AnecdoteList = ({ anecdotes }) => (
 
 const Anecdote = ({ anecdote }) => (
   <div>
-    <h2>{anecdote.content} by {anecdote.author}</h2>
+    <h2>
+      {anecdote.content} by {anecdote.author}
+    </h2>
     <p>Has {anecdote.votes} votes</p>
     <p>For more info see {anecdote.info} votes</p>
   </div>
@@ -85,6 +87,7 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const history = useHistory();
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
@@ -97,6 +100,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    history.push("/");
   };
 
   return (
@@ -156,6 +160,12 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(
+      "a new anecdote " + anecdote.content + " has been created!"
+    );
+    setTimeout(() => {
+      setNotification(null)
+    }, 10000)
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -180,6 +190,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      {notification && <p>{notification}</p>}
       <Switch>
         <Route path="/create">
           <CreateNew addNew={addNew} />
@@ -189,9 +200,6 @@ const App = () => {
         </Route>
         <Route path="/anecdotes/:id">
           <Anecdote anecdote={anecdote} />
-        </Route>
-        <Route path="/anecdotes">
-          <AnecdoteList anecdotes={anecdotes} />
         </Route>
         <Route path="/">
           <AnecdoteList anecdotes={anecdotes} />
