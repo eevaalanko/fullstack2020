@@ -1,17 +1,37 @@
 import React, { useEffect } from 'react'
-import _ from 'lodash'
-import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom'
 import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
-import { logout, setUser } from './reducers/userReducer'
+import { logout, setUser } from './reducers/loginReducer'
+import BlogList from './components/BlogList'
+import UserList from './components/UserList'
+
+const Menu = () => {
+  const padding = {
+    paddingRight: 5,
+  }
+  return (
+    <div>
+      <Link to="/" style={padding}>
+        blogs
+      </Link>
+      <Link to="/users" style={padding}>
+        users
+      </Link>
+    </div>
+  )
+}
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs)
-  const user = useSelector((state) => state.user)
+  const user = useSelector((state) => state.loggedInUser)
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -36,7 +56,8 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
+      <Menu/>
+
       <Notification />
       {user === null ? (
         <Togglable buttonLabel="login">
@@ -48,21 +69,14 @@ const App = () => {
           <p>
             {user.name} logged in <button onClick={logoutUser}>logout</button>
           </p>
-          <Togglable buttonLabel="new blog">
-            <h2>create new</h2>
-            <BlogForm />
-          </Togglable>
-          <br />
-          {_.sortBy(blogs, 'likes')
-            .reverse()
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                addLike={addLike}
-                removeBlog={remove}
-              />
-            ))}
+          <Switch>
+            <Route path="/users">
+              <UserList />
+            </Route>
+            <Route path="/">
+              <BlogList blogs={blogs} addLike={addLike} remove={remove} />
+            </Route>
+          </Switch>
         </div>
       )}
     </div>
