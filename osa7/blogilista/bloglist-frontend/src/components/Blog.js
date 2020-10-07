@@ -31,10 +31,10 @@ const Blog = ({ blog, addLike, removeBlog }) => {
         <p id="link">link: {blog.url}</p>
         <p>
           {`likes: ${blog.likes} `}
-          <button onClick={() => addLike(blog.id)}>like</button>
+          <button onClick={() => addLike(blog)}>like</button>
         </p>
-        <p>{blog.user &&  `user: ${blog.user.name} `}</p>
-        <button onClick={() => removeBlog(blog.id)}>remove</button>
+        <p>{blog.user && `user: ${blog.user.name} `}</p>
+        <button onClick={() => removeBlog(blog)}>remove</button>
       </div>
     </div>
   )

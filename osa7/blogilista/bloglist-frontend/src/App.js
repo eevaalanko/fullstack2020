@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import _ from 'lodash'
-import { useDispatch, } from 'react-redux'
-import {addErrorMessage, addMessage} from './reducers/notificationReducer'
+import { addErrorMessage } from './reducers/notificationReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -9,22 +8,21 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { useDispatch, useSelector } from 'react-redux'
+import {initializeBlogs, likeBlog, removeBlog} from './reducers/blogReducer'
 
 const App = () => {
-  const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newLink, setNewLink] = useState('')
-  const [newLikes, setNewLikes] = useState(0)
+  const blogs = useSelector((state) => state.blogs)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   console.log('blogs : ', blogs)
 
+  const dispatch = useDispatch()
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -34,42 +32,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newLink,
-      likes: newLikes,
-    }
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat({ ...returnedBlog, user }))
-        dispatch(addMessage(`a new blog ${newTitle} by ${newAuthor} added`), 3000)
-        setNewTitle('')
-        setNewAuthor('')
-        setNewLink('')
-        setNewLikes(0)
-      })
-      .catch(() => {
-        dispatch(addErrorMessage('validation failed', 3000))
-      })
-  }
-
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-  const handleLinkChange = (event) => {
-    setNewLink(event.target.value)
-  }
-  const handleLikesChange = (event) => {
-    setNewLikes(event.target.value)
-  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -94,34 +56,11 @@ const App = () => {
   }
 
   const addLike = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const changedBlog = { ...blog, likes: blog.likes + 1 }
-
-    blogService
-      .update(id, changedBlog)
-      .then((returnedBlog) => {
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-      })
-      .catch(() => {
-        addErrorMessage(`Blog '${blog.title}' was already removed from server`, 3000)
-      })
+    dispatch(likeBlog(id))
   }
 
-  const removeBlog = (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    if (window.confirm(`Delete ${blog.title}?`)) {
-      blogService
-        .remove(blog.id)
-        .then(() => {
-          setBlogs(blogs.filter((b) => b.id !== blog.id))
-          addMessage(`Deleted ${blog.title}`)
-        })
-        .catch(() => {
-          addErrorMessage(
-            `Information of ${blog.title} has already been removed from server`
-          )
-        })
-    }
+  const remove = (id) => {
+    dispatch(removeBlog(id))
   }
 
   const logout = () => {
@@ -132,7 +71,7 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification  />
+      <Notification />
       {user === null ? (
         <Togglable buttonLabel="login">
           <LoginForm
@@ -151,17 +90,7 @@ const App = () => {
           </p>
           <Togglable buttonLabel="new blog">
             <h2>create new</h2>
-            <BlogForm
-              addBlog={addBlog}
-              newTitle={newTitle}
-              handleTitleChange={handleTitleChange}
-              newAuthor={newAuthor}
-              handleAuthorChange={handleAuthorChange}
-              newLink={newLink}
-              handleLinkChange={handleLinkChange}
-              newLikes={newLikes}
-              handleLikesChange={handleLikesChange}
-            />
+            <BlogForm />
           </Togglable>
           <br />
           {_.sortBy(blogs, 'likes')
@@ -171,7 +100,7 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 addLike={addLike}
-                removeBlog={removeBlog}
+                removeBlog={remove}
               />
             ))}
         </div>

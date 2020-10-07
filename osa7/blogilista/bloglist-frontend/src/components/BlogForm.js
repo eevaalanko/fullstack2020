@@ -1,44 +1,55 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { useField } from '../hooks'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({
-  addBlog,
-  newTitle,
-  handleTitleChange,
-  newAuthor,
-  handleAuthorChange,
-  newLink,
-  handleLinkChange,
-  newLikes,
-  handleLikesChange,
-}) => (
-  <form onSubmit={addBlog}>
-    <p>
-      Title: <input id="title" value={newTitle} onChange={handleTitleChange} />
-    </p>
-    <p>
-      Author: <input id="author" value={newAuthor} onChange={handleAuthorChange} />
-    </p>
-    <p>
-      Link: <input id="link" value={newLink} onChange={handleLinkChange} />
-    </p>
-    <p>
-      Likes:{' '}
-      <input id="likes" type="number" value={newLikes} onChange={handleLikesChange} />
-    </p>
-    <button type="submit">save</button>
-  </form>
-)
-BlogForm.propTypes = {
-  addBlog: PropTypes.func.isRequired,
-  newTitle: PropTypes.string.isRequired,
-  handleTitleChange: PropTypes.func.isRequired,
-  newAuthor: PropTypes.string.isRequired,
-  handleAuthorChange: PropTypes.func.isRequired,
-  newLink: PropTypes.string.isRequired,
-  handleLinkChange: PropTypes.func.isRequired,
-  newLikes: PropTypes.number.isRequired,
-  handleLikesChange: PropTypes.func.isRequired,
+const BlogForm = () => {
+  const dispatch = useDispatch()
+  const title = useField('text')
+  const author = useField('text')
+  const link = useField('text')
+  const likes = useField('number')
+
+  const resetFields = () => {
+    title.reset()
+    author.reset()
+    link.reset()
+    likes.reset()
+  }
+  /* const history = useHistory(); */
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const newBlog = {
+      title: title.fieldProps.value,
+      author: author.fieldProps.value,
+      link: link.fieldProps.value,
+      likes: likes.fieldProps.value,
+    }
+    dispatch(createBlog(newBlog))
+    resetFields()
+    //   history.push("/");
+  }
+
+  return (
+    <form>
+      <p>
+        Title: <input {...title.fieldProps} />
+      </p>
+      <p>
+        Author: <input {...author.fieldProps} />
+      </p>
+      <p>
+        Link: <input {...link.fieldProps} />
+      </p>
+      <p>
+        Likes: <input {...likes.fieldProps} />
+      </p>
+      <button type="submit" onClick={handleSubmit}>
+        save
+      </button>
+    </form>
+  )
 }
 
 export default BlogForm
