@@ -101,6 +101,7 @@ const typeDefs = gql`
     allAuthors: [Author!]!
     findAuthor(name: String!): Author
     bookCount: Int!
+    allBooks: [Book!]!  
   }
 `
 
@@ -111,6 +112,7 @@ const resolvers = {
     findAuthor: (root, args) =>
       authors.find(p => p.name === args.name),
     bookCount: () => books.length,
+    allBooks: () => books
   }
 }
 
