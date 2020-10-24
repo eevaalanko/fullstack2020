@@ -163,8 +163,11 @@ const resolvers = {
       if (!args.name) {
         throw new UserInputError('Missing author input')
       }
-      if (!args.born || isNaN(args.born)) {
+      if (!args.born) {
         throw new UserInputError('Missing born input')
+      }
+      if (isNaN(args.born)) {
+        throw new UserInputError('Nannnn')
       }
       let author = authors.find((a) => a.name === args.name)
 
