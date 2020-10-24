@@ -112,7 +112,7 @@ const typeDefs = gql`
       author: String!
       genres: [String!]
     ): Book
-    editAuthor(name: String!, setBornTo: Int!): Author
+    editAuthor(name: String!, born: Int!): Author
   }
 `
 const resolvers = {
@@ -160,13 +160,20 @@ const resolvers = {
       return book
     },
     editAuthor: (root, args) => {
-      let author = authors.find((a) => a.name === args.name)
-      if (!author) {
-        return null
+      if (!args.name) {
+        throw new UserInputError('Missing author input')
       }
-      const updatedAuthor = { ...author, born: args.setBornTo }
+      if (!args.born || isNaN(args.born)) {
+        throw new UserInputError('Missing born input')
+      }
+      let author = authors.find((a) => a.name === args.name)
+
+      if (!author) {
+        throw new UserInputError('Author ' + args.name + ' not found')
+      }
+      const updatedAuthor = { ...author, born: args.born }
       authors = authors.map((p) => (p.name === args.name ? updatedAuthor : p))
-      return updatedAuthor
+      return authors[0]
     },
   },
 }
