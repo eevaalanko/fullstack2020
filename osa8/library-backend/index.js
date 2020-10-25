@@ -1,4 +1,4 @@
-const { UserInputError, ApolloServer, gql } = require('apollo-server')
+const { AuthenticationError, UserInputError, ApolloServer, gql } = require('apollo-server')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
@@ -27,16 +27,17 @@ mongoose
 
 const typeDefs = gql`
   type Author {
-    name: String!
-    id: String!
+    name: String
+    id: ID!
     born: Int
-    bookCount: Int!
+    bookCount: Int
+    books: [Book]
   }
 
   type Book {
     title: String!
     published: Int!
-    author: Author!
+    author: Author
     genres: [String!]!
     id: ID!
   }
@@ -79,39 +80,40 @@ const resolvers = {
       return Author.find({})
     },
     findAuthor: (root, args) => Author.findOne({ name: args.name }),
-    bookCount: () => {
-      return Book.find({})
-    },
-    allBooks: (root, args) => {
-      let filteredBooks = Book.find({})
-      if (args.author) {
-        filteredBooks = filteredBooks.filter((b) => args.author === b.author)
-      }
-      if (args.genre) {
-        filteredBooks = filteredBooks.filter((b) =>
-          b.genres.includes(args.genre)
-        )
-      }
-      return filteredBooks
+    bookCount: () => Book.collection.countDocuments(),
+    allBooks: async () => {
+      return Book.find({}).populate('author');
     },
     me: (root, args, context) => {
       return context.currentUser
     },
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      /*      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError('not permitted')
+      } */
       if (!args.title) {
         throw new UserInputError('Missing title data')
       }
-      if (!args.title.length < 2) {
+      if (args.title.length < 2) {
         throw new UserInputError('Title is too short')
       }
-      if ( Book.find({ title: { $in: [ args.title ] }})) {
-        throw new UserInputError('Name must be unique', {
-          invalidArgs: args.title,
-        })
+      let author = await Author.findOne({name: args.author})
+      if (!author) {
+        console.log('ei löytynyt')
+        author = new Author({name: args.author, born: null})
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
       }
-      const book = new Book({ ...args })
+      console.log('authorrr ', author)
+      const book = new Book({...args, author })
       try {
         await book.save()
       } catch (error) {
@@ -119,14 +121,16 @@ const resolvers = {
           invalidArgs: args,
         })
       }
+      console.log('book ', book)
       return book
+
     },
 
     editAuthor: async (root, args) => {
       if (!args.name) {
         throw new UserInputError('Missing name')
       }
-      if (!args.name.length < 4) {
+      if (args.name.length < 4) {
         throw new UserInputError('Name input is too short')
       }
       const author = await Author.findOne({ name: args.name })

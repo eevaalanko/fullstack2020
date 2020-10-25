@@ -10,6 +10,8 @@ const NewBook = ({ show, setError }) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([''])
 
+  console.log('published: ', published)
+
   // const result = useMutation(CREATE_BOOK)
 
   // console.log('result iiis: ', result)
@@ -30,6 +32,9 @@ const NewBook = ({ show, setError }) => {
   const submit = async (event) => {
     event.preventDefault()
     console.log('add book...')
+    if(!isNaN(published)){
+      setPublished(Number(published))
+    }
     createBook({ variables: { title, author, published, genres } })
     setTitle('')
     setPublished('')
