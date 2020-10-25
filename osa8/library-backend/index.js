@@ -76,13 +76,16 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     authorCount: () => Author.collection.countDocuments(),
-    allAuthors: () => {
-      return Author.find({})
+    allAuthors: async () => {
+      const authors = await Author.find({})
+      const  books = await Book.find({}).populate('author')
+      return authors.map(a => ( {name: a.name, born: a.born, id: a.id,
+        bookCount: books.filter(b => b.author && b.author.name === a.name).length}))
     },
     findAuthor: (root, args) => Author.findOne({ name: args.name }),
     bookCount: () => Book.collection.countDocuments(),
     allBooks: async () => {
-      return Book.find({}).populate('author');
+      return Book.find({}).populate('author')
     },
     me: (root, args, context) => {
       return context.currentUser
@@ -90,10 +93,10 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args, context) => {
-      /*      const currentUser = context.currentUser
+      const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError('not permitted')
-      } */
+      }
       if (!args.title) {
         throw new UserInputError('Missing title data')
       }
@@ -102,7 +105,6 @@ const resolvers = {
       }
       let author = await Author.findOne({name: args.author})
       if (!author) {
-        console.log('ei löytynyt')
         author = new Author({name: args.author, born: null})
         try {
           await author.save()
