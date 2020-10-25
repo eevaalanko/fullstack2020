@@ -6,11 +6,10 @@ import {ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK} from '../queries'
 const NewBook = ({ show, setError }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState(0)
+  const [publishYear, setPublishYear] = useState(0)
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([''])
 
-  console.log('published: ', published)
 
   // const result = useMutation(CREATE_BOOK)
 
@@ -32,12 +31,10 @@ const NewBook = ({ show, setError }) => {
   const submit = async (event) => {
     event.preventDefault()
     console.log('add book...')
-    if(!isNaN(published)){
-      setPublished(Number(published))
-    }
+    const published= Number(publishYear)
     createBook({ variables: { title, author, published, genres } })
     setTitle('')
-    setPublished('')
+    setPublishYear(0)
     setAuthor('')
     setGenres([])
     setGenre('')
@@ -69,8 +66,8 @@ const NewBook = ({ show, setError }) => {
           published
           <input
             type="number"
-            value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            value={publishYear}
+            onChange={({ target }) => setPublishYear(target.value)}
           />
         </div>
         <div>
