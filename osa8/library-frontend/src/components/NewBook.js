@@ -11,10 +11,6 @@ const NewBook = ({ show, setError }) => {
   const [genres, setGenres] = useState([''])
 
 
-  // const result = useMutation(CREATE_BOOK)
-
-  // console.log('result iiis: ', result)
-
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
     onError: (error) => {
@@ -32,7 +28,7 @@ const NewBook = ({ show, setError }) => {
     event.preventDefault()
     console.log('add book...')
     const published= Number(publishYear)
-    createBook({ variables: { title, author, published, genres } })
+    await createBook({variables: {title, author, published, genres}})
     setTitle('')
     setPublishYear(0)
     setAuthor('')

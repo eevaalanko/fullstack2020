@@ -8,7 +8,6 @@ const Authors = (props) => {
     pollInterval: 2000
   })
 
-  console.log('result: ', result)
   // eslint-disable-next-line react/prop-types
   if (!props.show) {
     return null
@@ -26,7 +25,7 @@ const Authors = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>name</th>
             <th>born</th>
             <th>books</th>
           </tr>
