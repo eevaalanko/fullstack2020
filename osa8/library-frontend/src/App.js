@@ -4,6 +4,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import {useApolloClient} from '@apollo/client'
+import Recommended from './components/Recommended'
 
 // eslint-disable-next-line react/prop-types
 const Notify = ({ errorMessage }) => {
@@ -50,6 +51,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('recommended')}>recommended</button>
       </div>
       <button onClick={logout}>logout</button>
       <Notify errorMessage={errorMessage} />
@@ -59,6 +61,8 @@ const App = () => {
       <Books show={page === 'books'} />
 
       <NewBook show={page === 'add'} setError={notify} />
+
+      <Recommended show={page === 'recommended'} setError={notify} />
     </div>
   )
 }

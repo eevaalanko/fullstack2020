@@ -27,21 +27,6 @@ const client = new ApolloClient({
   link: authLink.concat(httpLink)
 })
 
-/*const query = gql`
-  query {
-    allAuthors {
-      name
-      id
-      born
-      bookCount
-    }
-  }
-`
-client.query({ query }).then((response) => {
-  console.log(response.data)
-})
- */
-
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />

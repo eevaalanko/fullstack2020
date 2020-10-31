@@ -44,7 +44,7 @@ const typeDefs = gql`
 
   type User {
     username: String!
-    friends: [Author!]!
+    favoriteGenre: String
     id: ID!
   }
 
@@ -69,7 +69,7 @@ const typeDefs = gql`
       genres: [String!]
     ): Book
     editAuthor(name: String!, born: Int!): Author
-    createUser(username: String!): User
+    createUser(username: String!, favoriteGenre: String): User
     login(username: String!, password: String!): Token
   }
 `
@@ -173,7 +173,7 @@ const resolvers = {
       return author
     },
     createUser: (root, args) => {
-      const user = new User({ username: args.username })
+      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre || null  })
 
       return user.save().catch((error) => {
         throw new UserInputError(error.message, {
