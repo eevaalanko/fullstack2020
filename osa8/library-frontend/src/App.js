@@ -3,8 +3,9 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import {useApolloClient} from '@apollo/client'
+import {useApolloClient, useSubscription} from '@apollo/client'
 import Recommended from './components/Recommended'
+import {BOOK_ADDED} from './queries'
 
 // eslint-disable-next-line react/prop-types
 const Notify = ({ errorMessage }) => {
@@ -14,6 +15,13 @@ const Notify = ({ errorMessage }) => {
   return <div style={{ color: 'red' }}>{errorMessage}</div>
 }
 const App = () => {
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+
+      console.log(subscriptionData)
+      window.alert(`A new book: ${subscriptionData.data.bookAdded.title} was added.`)
+    }
+  })
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)

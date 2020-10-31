@@ -3,6 +3,7 @@ import {useQuery} from '@apollo/client'
 import {ALL_BOOKS, ALL_GENRES} from '../queries'
 import Select from 'react-select'
 
+
 const Books = (props) => {
   const genres = useQuery(ALL_GENRES)
   const genreOptions = genres && genres.data && genres.data.allGenres ?
@@ -14,6 +15,7 @@ const Books = (props) => {
     variables: {genre},
     pollInterval: 5000
   })
+
 
   // eslint-disable-next-line react/prop-types
   if (!props.show) {
