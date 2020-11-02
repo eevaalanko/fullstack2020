@@ -32,8 +32,6 @@ app.post(
     response
   ) => {
     const values = request.body;
-    console.log(calculateExercises(values.daily_exercises, values.target));
-    console.log(values);
     return response.json(
       calculateExercises(values.daily_exercises, values.target)
     );
