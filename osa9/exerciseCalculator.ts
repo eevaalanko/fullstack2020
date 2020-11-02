@@ -10,6 +10,7 @@ interface ExerciseResults {
 
 const originalTargetValue = 2;
 
+
 const calculateRating = (average: number): number => {
   if (average >= originalTargetValue) return 3;
   if (originalTargetValue - average < 1) return 2;
@@ -30,8 +31,8 @@ const getRatingDescription = (rating: number): string => {
 };
 
 const parse = (args: Array<string>): Array<number> => {
-  args.shift()
-  args.shift()
+  args.shift();
+  args.shift();
   if (args.length < 1) throw new Error("Not enough arguments");
   if (args.find((a) => isNaN(Number(a)))) {
     throw new Error("Provided values were not numbers!");
@@ -39,29 +40,28 @@ const parse = (args: Array<string>): Array<number> => {
   return args.map((a) => Number(a));
 };
 
-const calculateExercises = (dailyValues: Array<number>): ExerciseResults => {
-  console.log("whee");
-  const trainingDays = dailyValues.filter((v) => v !== 0);
-  const success = dailyValues.every((v) => v >= originalTargetValue);
-  const average = dailyValues.reduce((p, c) => p + c, 0) / dailyValues.length;
+export const calculateExercises = (daily_exercises: Array<number>, target: number): ExerciseResults => {
+  const trainingDays = daily_exercises.filter((v) => v !== 0);
+  const success = daily_exercises.every((v) => v >= target);
+  const average = daily_exercises.reduce((p, c) => p + c, 0) / daily_exercises.length;
   const rating = calculateRating(average);
 
   return {
-    periodLength: dailyValues.length,
+    periodLength: daily_exercises.length,
     trainingDays: trainingDays.length,
     success,
     rating,
     ratingDescription: getRatingDescription(rating),
-    target: originalTargetValue,
+    target: target,
     average,
   };
 };
 
 try {
   const values = parse(process.argv);
-  console.log(calculateExercises(values));
+  console.log(calculateExercises(values, originalTargetValue));
 } catch (e) {
-  console.log('Error, something bad happened, message: ', e.message);
+  console.log('Error, something bad happened, : ', e);
 }
 
 // const dailyValues = [3, 0, 2, 4.5, 0, 3, 1];
