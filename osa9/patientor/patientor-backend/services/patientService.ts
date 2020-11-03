@@ -1,15 +1,13 @@
-import patients from "../data/patients.json";
+import patients from "../data/patients";
 import {
-  PatientEntry,
+  Patient,
   NewPatientEntry,
   NonSensitivePatientEntry,
 } from "../types";
 
-const getEntries = (): Array<PatientEntry> =>
-  patients.map((p) => ({ ...p, entries: [] }));
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-  return getEntries().map(
+  return patients.map(
     ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
       id,
       name,
@@ -21,11 +19,11 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   );
 };
 
-const findById = (id: string): PatientEntry | undefined => {
-  return getEntries().find((p) => p.id === id);
+const findById = (id: string): Patient | undefined => {
+  return patients.find((p) => p.id === id);
 };
 
-const addEntry = (entry: NewPatientEntry): PatientEntry => {
+const addEntry = (entry: NewPatientEntry): Patient=> {
   const newPatientEntry = {
     id: String(Math.floor(Math.random() * 1000000000)),
     ...entry,
@@ -35,4 +33,4 @@ const addEntry = (entry: NewPatientEntry): PatientEntry => {
   return newPatientEntry;
 };
 
-export default { getEntries, getNonSensitiveEntries, findById, addEntry };
+export default { getNonSensitiveEntries, findById, addEntry };
