@@ -1,11 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { Icon, Item, Container, Button } from "semantic-ui-react";
+import { Icon, Container,  } from "semantic-ui-react";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue } from "../state";
 import { useParams } from "react-router-dom";
 import { updatePatient } from "../state";
+import EntriesComponent from "./EntriesComponent";
 
 const PatientComponent: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -47,12 +48,21 @@ const PatientComponent: React.FC = () => {
         {patient.name} <Icon {...genderIcons[patient.gender]} />
       </h1>
 
-      <div>
+      <p>
         <b>snn: {patient.ssn}</b>
-      </div>
-      <div>
+      </p>
+      <p>
         <b>occupation: {patient.occupation}</b>
+      </p>
+      <p>
+        <b>entries:</b>
+      </p>
+      <div>
+        {patient.entries.map((e) => (
+            <EntriesComponent entry={e} />
+        ))}
       </div>
+
     </Container>
   );
 };
