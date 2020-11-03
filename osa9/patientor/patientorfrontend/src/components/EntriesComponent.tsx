@@ -2,6 +2,7 @@ import React from "react";
 import { Item, Icon } from "semantic-ui-react";
 import { Entry } from "../types";
 import HealthRatingBar from "./HealthRatingBar";
+import { useStateValue } from "../state";
 
 const assertNever = (value: never): never => {
   throw new Error(
@@ -10,6 +11,8 @@ const assertNever = (value: never): never => {
 };
 
 export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
+  const [{ diagnoses }] = useStateValue();
+  console.log("diagnoses: ", diagnoses);
   switch (entry.type) {
     case "Hospital":
       return (
@@ -19,9 +22,12 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
               {entry.date} <Icon name="medrt" />
             </Item.Header>
             <Item.Description>{entry.description}</Item.Description>
-            {entry.diagnosisCodes ? (
+            {entry.diagnosisCodes && diagnoses ? (
               <Item.Description>
-                Diagnosis codes: {entry.diagnosisCodes.map((c) => c)}
+                <div>
+                 <p><b>Diagnoses</b></p>
+                  <ul>{entry.diagnosisCodes.map(c => <li key={c}>{c} {diagnoses[c] && diagnoses[c].name}</li>)}</ul>
+                </div>
               </Item.Description>
             ) : null}
             <Item.Extra>
@@ -38,10 +44,13 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
               {entry.date} <Icon name="heart" />
             </Item.Header>
             <Item.Description>{entry.description}</Item.Description>
-            {entry.diagnosisCodes ? (
-              <Item.Description>
-                Diagnosis codes: {entry.diagnosisCodes.map((c) => c + " ")}
-              </Item.Description>
+            {entry.diagnosisCodes && diagnoses ? (
+                <Item.Description>
+                  <div>
+                    <p><b>Diagnoses</b></p>
+                    <ul>{entry.diagnosisCodes.map(c => <li key={c}>{c} {diagnoses[c] && diagnoses[c].name}</li>)}</ul>
+                  </div>
+                </Item.Description>
             ) : null}
             {entry.sickLeave ? (
               <Item.Extra>
@@ -60,10 +69,13 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
               {entry.date} <Icon name="doctor" />
             </Item.Header>
             <Item.Description>{entry.description}</Item.Description>
-            {entry.diagnosisCodes ? (
-              <Item.Description>
-                Diagnosis codes: {entry.diagnosisCodes.map((c) => c)}
-              </Item.Description>
+            {entry.diagnosisCodes && diagnoses ? (
+                <Item.Description>
+                  <div>
+                    <p><b>Diagnoses</b></p>
+                    <ul>{entry.diagnosisCodes.map(c => <li key={c}>{c} {diagnoses[c] && diagnoses[c].name}</li>)}</ul>
+                  </div>
+                </Item.Description>
             ) : null}
             <Item.Extra>
               <HealthRatingBar

@@ -55,6 +55,17 @@ export const reducer = (state: State, action: Action): State => {
           },
         },
       };
+    case "SET_DIAGNOSIS_LIST":
+      return {
+        ...state,
+        diagnoses: {
+          ...action.payload.reduce(
+              (mem, diagnosis) => ({ ...mem, [diagnosis.code]: diagnosis }),
+              {}
+          ),
+          ...state.diagnoses
+        }
+      };
     default:
       return state;
   }

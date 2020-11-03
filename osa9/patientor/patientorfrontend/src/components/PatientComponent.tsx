@@ -25,7 +25,6 @@ const PatientComponent: React.FC = () => {
           `${apiBaseUrl}/patients/${id}`
         );
         dispatch(updatePatient(patientFromApi));
-        console.log("patientFromApi:", patientFromApi);
       } catch (e) {
         console.error(e);
       }
@@ -48,14 +47,19 @@ const PatientComponent: React.FC = () => {
       <p>
         <b>occupation: {patient.occupation}</b>
       </p>
-      <p>
-        <b>entries:</b>
-      </p>
-      <div>
-        {patient.entries.map((e) => (
-          <EntriesComponent key={e.id} entry={e} />
-        ))}
-      </div>
+
+      {patient.entries.length > 0 && (
+        <div>
+          <p>
+            <b>entries:</b>
+          </p>
+          <div>
+            {patient.entries.map((e) => (
+              <EntriesComponent key={e.id} entry={e} />
+            ))}
+          </div>
+        </div>
+      )}
     </Container>
   );
 };
