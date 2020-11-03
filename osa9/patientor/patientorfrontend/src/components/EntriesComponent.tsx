@@ -21,7 +21,7 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Item.Description>{entry.description}</Item.Description>
             {entry.diagnosisCodes ? (
               <Item.Description>
-                {entry.diagnosisCodes.map((c) => c)}
+                Diagnosis codes: {entry.diagnosisCodes.map((c) => c)}
               </Item.Description>
             ) : null}
             <Item.Extra>
@@ -40,7 +40,7 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Item.Description>{entry.description}</Item.Description>
             {entry.diagnosisCodes ? (
               <Item.Description>
-                {entry.diagnosisCodes.map((c) => c)}
+                Diagnosis codes: {entry.diagnosisCodes.map((c) => c + " ")}
               </Item.Description>
             ) : null}
             {entry.sickLeave ? (
@@ -62,8 +62,7 @@ export const EntriesComponent: React.FC<{ entry: Entry }> = ({ entry }) => {
             <Item.Description>{entry.description}</Item.Description>
             {entry.diagnosisCodes ? (
               <Item.Description>
-                {" "}
-                {entry.diagnosisCodes.map((c) => c)}
+                Diagnosis codes: {entry.diagnosisCodes.map((c) => c)}
               </Item.Description>
             ) : null}
             <Item.Extra>
