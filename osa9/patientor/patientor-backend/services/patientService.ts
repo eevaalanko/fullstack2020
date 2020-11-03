@@ -1,5 +1,5 @@
 import patients from "../data/patients";
-import { Patient, NewPatientEntry, NonSensitivePatientEntry } from "../types";
+import {Patient, NewPatientEntry, NonSensitivePatientEntry, NewEntry} from "../types";
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   return patients.map(
@@ -28,7 +28,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
   return newPatientEntry;
 };
 
-const addEntry = (newEntry: NewPatientEntry, patient: Patient): Patient => {
+const addEntry = (newEntry: NewEntry, patient: Patient): Patient => {
   const entry = {
     id: String(Math.floor(Math.random() * 1000000000)),
     ...newEntry,

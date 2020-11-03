@@ -1,6 +1,6 @@
 import express from "express";
 import patientService from "../services/patientService";
-import toNewPatientEntry from "../utils";
+import { toNewPatientEntry, toNewEntry } from "../utils";
 
 const router = express.Router();
 
@@ -23,12 +23,12 @@ router.post("/", (req, res) => {
     const addedEntry = patientService.addPatient(newPatientEntry);
     res.json(addedEntry);
   } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     res.status(400).send(e.message);
   }
 });
 
-router.get('/:id/entries', (req, res) => {
+router.get("/:id/entries", (req, res) => {
   const patient = patientService.findById(req.params.id);
   if (patient) {
     console.log(patient.entries);
@@ -38,13 +38,13 @@ router.get('/:id/entries', (req, res) => {
   }
 });
 
-router.post('/:id/entries', (req, res) => {
+router.post("/:id/entries", (req, res) => {
   const patient = patientService.findById(req.params.id);
-  if(patient) {
-    const newEntry = toNewPatientEntry(req.body);
+  if (patient) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const newEntry = toNewEntry(req.body);
     const entryAddedPatient = patientService.addEntry(newEntry, patient);
     res.json(entryAddedPatient);
-    console.log('entryAddedPatient:', entryAddedPatient);
   } else {
     res.status(400);
   }

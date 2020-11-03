@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/restrict-template-expressions,@typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, NewPatientEntry } from "./types";
+import {Gender, NewEntry, NewPatientEntry} from "./types";
 
 const isString = (text: any): text is string =>
   typeof text === "string" || text instanceof String;
@@ -49,7 +49,7 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
-const toNewPatientEntry = (object: any): NewPatientEntry => ({
+export const toNewPatientEntry = (object: any): NewPatientEntry => ({
   name: parseName(object.name),
   dateOfBirth: parseDateString(object.dateOfBirth),
   ssn: parseSSN(object.ssn),
@@ -58,4 +58,9 @@ const toNewPatientEntry = (object: any): NewPatientEntry => ({
   entries: []
 });
 
-export default toNewPatientEntry;
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const toNewEntry = (object: any): NewEntry => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return object;
+
+};
