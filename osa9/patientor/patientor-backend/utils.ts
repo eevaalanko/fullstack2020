@@ -26,8 +26,14 @@ const parseOccupation = (occupation: any): string => {
   return occupation;
 };
 
+const isDate = (date: string): boolean => {
+  return Boolean(Date.parse(date));
+};
+
+
 const parseDateString = (date: any): string => {
-  if (!date || !isString(date)) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  if (!date || !isString(date) || !isDate(date)) {
     throw new Error(`Incorrect or missing date: ${date}`);
   }
   return date;
@@ -45,7 +51,7 @@ const parseGender = (gender: any): Gender => {
 
 const toNewPatientEntry = (object: any): NewPatientEntry => ({
   name: parseName(object.name),
-  dateOfBirth: parseDateString(object.date),
+  dateOfBirth: parseDateString(object.dateOfBirth),
   ssn: parseSSN(object.ssn),
   gender: parseGender(object.gender),
   occupation: parseOccupation(object.occupation),
