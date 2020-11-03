@@ -18,9 +18,8 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { code, name, latin } = req.body;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const newDiagnoseEntry = diagnoseService.addEntry(code, name, latin);
   res.json(newDiagnoseEntry);
 });
