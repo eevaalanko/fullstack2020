@@ -86,3 +86,4 @@ export interface DiagnoseEntry {
     name: string;
     latin?: string;
 }
+
