@@ -5,23 +5,24 @@ import {
   NonSensitivePatientEntry,
 } from "../types";
 
-
-const getEntries = (): Array<PatientEntry> => {
-  return patients;
-};
+const getEntries = (): Array<PatientEntry> =>
+  patients.map((p) => ({ ...p, entries: [] }));
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-  return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
-    id,
-    name,
-    dateOfBirth,
-    gender,
-    occupation,
-  }));
+  return getEntries().map(
+    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+      id,
+      name,
+      dateOfBirth,
+      gender,
+      occupation,
+      entries,
+    })
+  );
 };
 
 const findById = (id: string): PatientEntry | undefined => {
-  return patients.find((p) => p.id === id);
+  return getEntries().find((p) => p.id === id);
 };
 
 const addEntry = (entry: NewPatientEntry): PatientEntry => {
